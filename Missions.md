@@ -9,12 +9,12 @@ Here are your missions.
 
 # Mission 2.2 ----
 - Decide how to collaborate with github, split the work and meet every 10-20 min
-- Adapt 03_plots.R
-- produce a graph as similar as possible to the one presented in the mural
-- Adapt the yaxis
-- Adapt the xaxis to display dates in the same format and angle
+- Adapt 02_mission1.R
+- save a graph for the treatment plant "Aalst" and "Oostende" between 2024-09-01 and 2025-09-01 for the target "SARS SARS-CoV-2 E gene"
+- Adapt the yaxis to match the one displayed in Murals
+- Adapt the xaxis to match the one displayed in Murals
 - Add a past two weeks moving average line
-- display values below LOQ in red, and the other in green
-- Add horizontal lines for the levels
+- Display the mean of "E gen", "N1 gen", "N2 gen" instead of "E gen" only
+- Display the viral ratio of measure "SARS" over "PMMV"
+- Display values below LOQ in red, and the other in green
 - Translate the graph in two languages of your choice using a function
-- Poduce and save graphs for all three measures (SARS-CoV-2, influenza, RSV)
