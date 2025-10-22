@@ -20,4 +20,5 @@ date_graph_end <- "2026-08-25"
 date_switch <- "2025-09-01"
 
 # Data preparation ----
+source("02_test1_AM.R")
 source("02_test1.R")
