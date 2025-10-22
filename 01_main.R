@@ -19,5 +19,8 @@ date_start <- "2024-06-10"
 date_graph_end <- "2026-08-25"
 date_switch <- "2025-09-01"
 
-# Data preparation ----
-source("02_test1.R")
+# Source member 1 script ----
+source("02_test_member_1.R")
+
+# Source member 2 script ----
+source("02_test_member_2.R")
