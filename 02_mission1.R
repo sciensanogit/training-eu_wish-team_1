@@ -6,6 +6,13 @@
 #|
 ############################################################################### #
 
+# Load packages ----
+# select packages
+pkgs <- c("dplyr", "ggplot2")
+# install packages
+install.packages(setdiff(pkgs, rownames(installed.packages())))
+invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+
 # load data ----
 # Belgian data are available here https://www.geo.be/catalog/details/9eec5acf-a2df-11ed-9952-186571a04de2?l=en
 #| Metadata
@@ -40,7 +47,7 @@ df$date <- format(df$date, "%Y-%m-%d")
 # unique(df$measure) ...
 
 # graph
-df %>%
+plot <- df %>%
   filter(labProtocolID == "SC_COV_4.1") %>%
   filter(measure == "SARS-CoV-2 E gene") %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
@@ -48,3 +55,9 @@ df %>%
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = T) +
   geom_line(na.rm = T)
+
+plot
+
+# save
+ggsave(file="./plot/graph_oostende_aalst.png",
+       plot, width = 21, height = 12, dpi = 200)
