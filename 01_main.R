@@ -14,6 +14,7 @@ pkgs <- c("dplyr", "ggplot2")
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
+
 # Mission 1.1 ----
 ## Source member 1 script ----
 source("02_test_member_1.R")
