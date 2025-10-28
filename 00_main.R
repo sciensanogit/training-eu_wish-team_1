@@ -17,7 +17,7 @@ invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # Mission 1.1 ----
 ## Source member 1 script ----
-source("02_test_member_1.R")
+source("mission1-member1.R")
 
 ## Source member 2 script ----
-source("02_test_member_2.R")
+source("mission1-member2.R")
