@@ -8,7 +8,7 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "ggplot2", "zoo")
+pkgs <- c("dplyr", "ggplot2", "zoo", "stringr")
 # install packages
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
@@ -58,12 +58,23 @@ plot_data <- df %>%
   group_by(siteName) %>% 
   mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T))
 
+measure_means <- df %>% 
+  mutate(date = as.Date(date)) %>%
+  filter(labProtocolID == "SC_COV_4.1") %>%
+  mutate(measure = if_else(str_detect(measure, "SARS-CoV-2"), "SARS", measure)) %>% 
+  filter(measure == "SARS") %>%
+  filter(date > "2024-09-01" & date < "2025-09-01") %>%
+  filter(siteName %in% c("Aalst", "Oostende")) %>%
+  group_by(siteName) %>% 
+  mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T))
+
 
 plot <- plot_data %>% 
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  geom_line(aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted", linewidth = 1) + 
+  # geom_line(aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted", linewidth = 1) + 
+  geom_line(data = measure_means, aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted", linewidth = 1) + 
   ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)") +
   xlab("") +
   labs(colour = "Site Name") +
