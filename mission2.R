@@ -13,6 +13,7 @@ pkgs <- c("dplyr", "ggplot2", "zoo")
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 require(lubridate)
+require(zoo)
 
 # load data ----
 # Belgian data are available here https://www.geo.be/catalog/details/9eec5acf-a2df-11ed-9952-186571a04de2?l=en
