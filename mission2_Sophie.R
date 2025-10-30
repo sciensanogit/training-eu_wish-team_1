@@ -84,15 +84,39 @@ plot_data2 <- df %>%
   mutate(date = as.POSIXct(date)) %>%
   group_by(siteName) %>%
   mutate(mov_ave = rollmean(value, k = 2, align = "center", fill = NA)) %>%
+  mutate(SARS = value) %>%
   ungroup()
 
+  plot_data3 <- df %>%
+    filter(labProtocolID == "SC_COV_4.1") %>%
+    filter(measure %in% c( "Pepper mild mottle virus capsid protein gene region")) %>%
+    filter(date > "2024-09-01" & date < "2025-09-01") %>%
+    filter(siteName %in% c("Aalst", "Oostende")) %>%
+    mutate(date = as.POSIXct(date)) %>%
+    group_by(siteName) %>%
+    mutate(mov_ave = rollmean(value, k = 2, align = "center", fill = NA)) %>%
+    mutate(PMMV = value) %>%
+  ungroup()  
+  
+  # do the plotting
+  ggplot(plot_data, aes(x = date, y = value, group = siteName, color = siteName)) +
+    geom_point(na.rm = T) +
+    #geom_line(data = plot_data, aes(x= date, y = mov_ave, color = siteName)) + 
+    geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
+    geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
+    
+    labs(y = "SARS-CoV-2 viral to faecal ratio (10e-6 copies/copies)",
+         x = "") +
+    scale_x_datetime(date_labels = "%d/%m/%Y W%U", date_breaks = "6 weeks") + # Format dates and times
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis
+  
 
 
 # do the plotting
-  ggplot(plot_data, aes(x = date, y = value, group = siteName, color = siteName)) +
+  ggplot(plot_data2, aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = T) +
   #geom_line(data = plot_data, aes(x= date, y = mov_ave, color = siteName)) + 
-  geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName), linetype = "dashed") + 
+  geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
   labs(y = "SARS-CoV-2 viral to faecal ratio (10e-6 copies/copies)",
            x = "") +
   scale_x_datetime(date_labels = "%d/%m/%Y W%U", date_breaks = "6 weeks") + # Format dates and times
