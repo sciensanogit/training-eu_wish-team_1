@@ -16,8 +16,9 @@ invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 
 # Mission 1.1 ----
-## Source member 1 script ----
-source("mission1-member1.R")
 
-## Source member 2 script ----
-source("mission1-member2.R")
+files_to_source <- list.files(pattern = "mission1", full.names = TRUE)
+
+for (this_file in files_to_source) {
+  source(this_file)
+}
