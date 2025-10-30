@@ -66,6 +66,7 @@ plot <- plot_data %>%
   geom_line(aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted", linewidth = 1) + 
   ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)") +
   xlab("") +
+  labs(colour = "Site Name") +
   scale_x_date(labels = function(x) {
     paste0(format(as.Date(x), "%d/%m/%y"), 
            " (W", 
