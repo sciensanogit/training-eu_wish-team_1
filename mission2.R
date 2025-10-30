@@ -49,14 +49,16 @@ df$date <- format(df$date, "%Y-%m-%d")
 # unique(df$measure) ...
 
 # graph
-plot <- df %>%
+plot_data <- df %>%
   mutate(date = as.Date(date)) %>%
   filter(labProtocolID == "SC_COV_4.1") %>%
   filter(measure == "SARS-CoV-2 E gene") %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   group_by(siteName) %>% 
-  mutate(moving_avg = rollmean(value, 14, align = "left", na.pad = T)) %>% 
+  mutate(moving_avg = rollmean(value, 14, align = "left", na.pad = T)) 
+
+plot <- plot_data %>% 
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
