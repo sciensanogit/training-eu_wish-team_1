@@ -13,6 +13,7 @@ pkgs <- c("dplyr", "ggplot2", "zoo")
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 require(lubridate)
+require(zoo)
 
 # load data ----
 # Belgian data are available here https://www.geo.be/catalog/details/9eec5acf-a2df-11ed-9952-186571a04de2?l=en
@@ -48,7 +49,7 @@ df$date <- format(df$date, "%Y-%m-%d")
 # unique(df$measure) ...
 
 # graph
-plot <- df %>%
+plot_data <- df %>%
   mutate(date = as.Date(date)) %>%
   filter(labProtocolID == "SC_COV_4.1") %>%
   filter(measure == "SARS-CoV-2 E gene") %>%
@@ -56,6 +57,9 @@ plot <- df %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   group_by(siteName) %>% 
   mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T)) %>% 
+
+
+plot <- plot_data %>% 
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
