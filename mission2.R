@@ -12,6 +12,7 @@ pkgs <- c("dplyr", "ggplot2")
 # install packages
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+require(lubridate)
 
 # load data ----
 # Belgian data are available here https://www.geo.be/catalog/details/9eec5acf-a2df-11ed-9952-186571a04de2?l=en
@@ -48,6 +49,7 @@ df$date <- format(df$date, "%Y-%m-%d")
 
 # graph
 plot <- df %>%
+  mutate(date = as.Date(date)) %>%
   filter(labProtocolID == "SC_COV_4.1") %>%
   filter(measure == "SARS-CoV-2 E gene") %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
@@ -55,7 +57,13 @@ plot <- df %>%
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)")
+  ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)") +
+  scale_x_date(labels = function(x) {
+    paste0(format(as.Date(x), "%d/%m/%y"), 
+           " (W", 
+           epiweek(as.Date(x)),
+           ")")
+  })
 
 plot
 
