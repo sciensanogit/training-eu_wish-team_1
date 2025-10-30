@@ -8,7 +8,7 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "ggplot2")
+pkgs <- c("dplyr", "ggplot2", "zoo")
 # install packages
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
