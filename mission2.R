@@ -53,8 +53,8 @@ plot <- df %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
-  geom_point(na.rm = T) +
-  geom_line(na.rm = T) +
+  geom_point(na.rm = TRUE) +
+  geom_line(na.rm = TRUE) +
   ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)")
 
 plot
