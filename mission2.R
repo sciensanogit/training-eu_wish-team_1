@@ -55,11 +55,11 @@ plot <- df %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   group_by(siteName) %>% 
-  mutate(moving_avg = rollmean(value, 14, align = "left", na.pad = T)) %>% 
+  mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T)) %>% 
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  geom_line(aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted") + 
+  geom_line(aes(x = date, y = moving_avg, group = siteName, color = siteName), linetype = "dotted", linewidth = 1) + 
   ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)") +
   xlab("") +
   scale_x_date(labels = function(x) {
