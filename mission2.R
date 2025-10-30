@@ -57,14 +57,17 @@ plot <- df %>%
   ggplot(aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
+  
   ylab("SARS-CoV-2 viral to faecal ratio \n(10e-6 copies/copies)") +
   xlab("") +
+  
   scale_x_date(labels = function(x) {
     paste0(format(as.Date(x), "%d/%m/%y"), 
            " (W", 
            epiweek(as.Date(x)),
            ")")
-  })
+  }) + 
+  theme_bw()
 
 plot
 
