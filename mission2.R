@@ -67,7 +67,8 @@ plot <- df %>%
            " (W", 
            epiweek(as.Date(x)),
            ")")
-  })
+  }) + 
+  theme_bw()
 
 plot
 
