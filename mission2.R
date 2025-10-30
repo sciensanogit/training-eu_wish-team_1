@@ -56,7 +56,7 @@ plot_data <- df %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   group_by(siteName) %>% 
-  mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T)) %>% 
+  mutate(moving_avg = rollmean(value, 14, align = "center", na.pad = T))
 
 
 plot <- plot_data %>% 
