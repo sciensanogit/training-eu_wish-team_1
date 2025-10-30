@@ -8,10 +8,12 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "ggplot2")
+pkgs <- c("dplyr", "ggplot2", "zoo")
 # install packages
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+
+library(zoo)
 
 # load data ----
 # Belgian data are available here https://www.geo.be/catalog/details/9eec5acf-a2df-11ed-9952-186571a04de2?l=en
@@ -62,25 +64,63 @@ plot
 ggsave(file="./plot/graph_oostende_aalst.png",
        plot, width = 21, height = 12, dpi = 200)
 
-# data for graph
+# data for graph on one gen
 plot_data <- df %>%
   filter(labProtocolID == "SC_COV_4.1") %>%
   filter(measure == "SARS-CoV-2 E gene") %>%
   filter(date > "2024-09-01" & date < "2025-09-01") %>%
   filter(siteName %in% c("Aalst", "Oostende")) %>%
   mutate(date = as.POSIXct(date)) %>%
-  mutate(mov_ave = )
+  group_by(siteName) %>%
+  mutate(mov_ave = rollmean(value, k = 2, align = "center", fill = NA)) %>%
+  ungroup()
 
+# data for graph with all three gen
+plot_data2 <- df %>%
+  filter(labProtocolID == "SC_COV_4.1") %>%
+  filter(measure %in% c("SARS-CoV-2 E gene", "SARS-CoV-2 nucleocapsid gene, allele 1", "SARS-CoV-2 nucleocapsid gene, allele 2")) %>%
+  filter(date > "2024-09-01" & date < "2025-09-01") %>%
+  filter(siteName %in% c("Aalst", "Oostende")) %>%
+  mutate(date = as.POSIXct(date)) %>%
+  group_by(siteName) %>%
+  mutate(mov_ave = rollmean(value, k = 2, align = "center", fill = NA)) %>%
+  mutate(SARS = value) %>%
+  ungroup()
+
+  plot_data3 <- df %>%
+    filter(labProtocolID == "SC_COV_4.1") %>%
+    filter(measure %in% c( "Pepper mild mottle virus capsid protein gene region")) %>%
+    filter(date > "2024-09-01" & date < "2025-09-01") %>%
+    filter(siteName %in% c("Aalst", "Oostende")) %>%
+    mutate(date = as.POSIXct(date)) %>%
+    group_by(siteName) %>%
+    mutate(mov_ave = rollmean(value, k = 2, align = "center", fill = NA)) %>%
+    mutate(PMMV = value) %>%
+  ungroup()  
+  
+  # do the plotting
+  ggplot(plot_data, aes(x = date, y = value, group = siteName, color = siteName)) +
+    geom_point(na.rm = T) +
+    #geom_line(data = plot_data, aes(x= date, y = mov_ave, color = siteName)) + 
+    geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
+    geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
+    
+    labs(y = "SARS-CoV-2 viral to faecal ratio (10e-6 copies/copies)",
+         x = "") +
+    scale_x_datetime(date_labels = "%d/%m/%Y W%U", date_breaks = "6 weeks") + # Format dates and times
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis
+  
 
 
 # do the plotting
-  ggplot(plot_data, aes(x = date, y = value, group = siteName, color = siteName)) +
+  ggplot(plot_data2, aes(x = date, y = value, group = siteName, color = siteName)) +
   geom_point(na.rm = T) +
-  geom_line(na.rm = T) + 
+  #geom_line(data = plot_data, aes(x= date, y = mov_ave, color = siteName)) + 
+  geom_line(data = plot_data2, aes(x= date, y = mov_ave, color = siteName)) + 
   labs(y = "SARS-CoV-2 viral to faecal ratio (10e-6 copies/copies)",
            x = "") +
-    scale_x_datetime(date_labels = "%d/%m/%Y W%U", date_breaks = "6 weeks") + # Format dates and times
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis
+  scale_x_datetime(date_labels = "%d/%m/%Y W%U", date_breaks = "6 weeks") + # Format dates and times
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis
     
 
 plot1
