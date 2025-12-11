@@ -113,7 +113,7 @@ data_sars <- data_sars %>%
 data_full <- full_join(data_sars, data_pmmv) %>% 
   mutate(value_pmmv = SARS/PMMV) %>% 
   filter(!is.nan(value_pmmv)) %>% 
-  group_by(date, siteName) %>% 
+  group_by(siteName) %>% 
   mutate(moving_avg = rollmean(value_pmmv, 14, align = "center", na.pad = T))
 
 
