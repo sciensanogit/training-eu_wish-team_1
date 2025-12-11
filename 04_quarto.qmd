@@ -1,7 +1,7 @@
 ---
 title: 'Wastewater-based surveillance report'
 subtitle: "Respiratory viruses"
-author: "Author:Team X"
+author: "Author: Team 1 (Elisa, Gizem, Kim, Patrick)"
 format:  
   html: 
     toc: true
@@ -36,15 +36,15 @@ Latest results dating of `r format(date_reporting, "%G-W%V")` (`r format(date_re
 -   `r main_text %>% filter(date_week == format(date_reporting, "%G-W%V")) %>% pull(SARS_nation_level_en)`
 
 ## National level
+```{r}
+#| fig-cap: Viral concentration measured in wastewater from two wastewater treatment plants. Normalised SARS-CoV-2 RNA concentrations (SARS-CoV-2/PMMoV) are shown for each sampling date to illustrate trends in wastewater-based surveillance and differences in viral loading across catchments.
 
-Viral concentration of two wastewater treatment plants:
-
-![](./plot/graph_oostende_aalst.png)
+knitr::include_graphics("./plot/dummy_plot.png")
+```
 
 ## Individual area level
 
-Table of two wastewater treatment plants :
-
 ```{r}
-# tbl_nation
+#| tbl-cap: Table of the most recent ten wastewater measurements, reporting site names, sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
+tbl_nation
 ```

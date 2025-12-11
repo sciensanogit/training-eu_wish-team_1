@@ -59,7 +59,7 @@ data <- df %>%
 # display existing labProtocolID
 # unique(df$labProtocolID)
 # rename measures
-  mutate(measure = if_else(str_detect(labProtocolID, "COV"), "SARS", "PPMV)")) %>% 
+  mutate(measure = if_else(str_detect(labProtocolID, "COV"), "SARS", "PPMV")) %>% 
 # diplay existing measure
 # unique(df$measure)
 
@@ -72,13 +72,31 @@ data <- df %>%
          value = if_else(measure == "PPMV" & value < 250, NA, value),
 # remove outliers
 # remove outlier based on the variable named "Quality". Set samples with "Quality concerns" to NA
-         value = if_else(quality == "Quality concerns", NA, value)) %>% 
+         value = if_else(quality == "Quality concerns", NA, value)) #%>% 
+  # filter(!is.na(value))
 
 # compute mean of replicated analysis of each measure
-  mutate
+# - compute mean of replicated analysis of each measure using group_by() and summarize()
+means <- data %>% 
+  group_by(date, siteName, labProtocolID) %>% 
+  summarise(mean_value = mean(value, na.rm = T))
+
+# Merge this back in and replace on the values
+  # - compute viral ratio (SARS/PMMV) in a variable named "value_pmmv" using pivot_longer()
+  # - compute moving average on past 14 days
+  # - aggregate data at national level by computing weighted mean with factor being the popServed by each site
+calculations <- means %>% 
+  left_join(data %>% select(-value, -labName)) %>% 
+  distinct() %>% # still get a "duplication" of rows from the mean calc for some reason
+  select(-labProtocolID) %>%
+  pivot_wider(
+    names_from = measure,
+    values_from = mean_value
+  )
+
+
 
 # compute viral ratio
-# unique(df$measure) ...
 
 # compute moving average on past 14 days
 
