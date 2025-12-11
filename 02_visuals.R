@@ -8,18 +8,66 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2")
+pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
 # install packages
-install.packages(setdiff(pkgs, rownames(installed.packages())))
+# install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data
+df <- read_delim("Belgium_export-nation.csv")
+
+
+df <- df %>%
+  mutate(
+    date = as_date(date),  # convert to Date (handles "YYYY-MM-DD")
+    value_pmmv = as.numeric(value_pmmv),
+    value_pmmvavg14d_past = as.numeric(value_pmmv_avg14d_past)
+  )
 
 # create folder if not existing
+if (!dir.exists("./plot")) dir.create("./plot", recursive = TRUE)
 
 # graph at national level
 
+
+# Label function: decimal numbers, comma thousands
+decimal_labels <- function(x) format(x, big.mark = ",", scientific = FALSE, nsmall = 2)
+
+p <- ggplot(df, aes(x = date)) +
+  geom_line(aes(y = value_pmmv, colour = "value_pmmv"), linewidth = 1.1, na.rm = TRUE) +
+  geom_point(aes(y = value_pmmv, colour = "value_pmmv"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
+  geom_line(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), linewidth = 1.1, na.rm = TRUE) +
+  geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
+  scale_colour_manual(
+    name = NULL,
+    values = c("value_pmmv" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
+    labels = c("PMMV", "PMMV (14-day avg, past)")
+  ) +
+  scale_x_date(
+    date_breaks = "7 days",
+    date_labels = "%d/%m/%y"
+    # If ggplot2 >= 3.4: guide = guide_axis(angle = 90)
+  ) +
+  scale_y_continuous(labels = decimal_labels) +   # <--- decimals, no scientific
+  labs(title = "PMMV vs 14-day Past Average", x = "Date", y = "Value") +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+  )
+
+
 # save graph
+
+
+ggsave(
+  filename = "./plot/graph-viral_ratio-nation.png",
+  plot = p,
+  width = 9, height = 5, dpi = 300,
+  bg = "white"             # <-- forces a white image background
+)
+
 
 # display msg
 cat("- Success : visuals saved \n")
