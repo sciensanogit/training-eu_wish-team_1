@@ -21,7 +21,7 @@ dir.create("plot")
 
 #### Additional nice plot theme to apply later
 theme_custom <- theme(
-  plot.title = element_text(color = "darkgreen", size = 14, face = "bold", hjust = 0.5),
+  plot.title = element_text(color = "darkgreen", size = 16, hjust = 0.5),
   
   # Backgrounds
   plot.background  = element_rect(fill = "white", color = NA),
@@ -38,9 +38,10 @@ theme_custom <- theme(
 
 # graph at national level
 
-## Add tersholds
+# Change dates
+df_be$date <- as.Date(df_be$date)
 
-# Define thresholds and labels
+# Define thresholds and labels to use in sometime in the future
 level_values <- c(1e+12, 2e+12, 4e+12)                   # y-axis positions of lines
 level_labels <- c("Moderate level", "High level", "Very high level")  # labels
 
