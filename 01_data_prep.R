@@ -8,7 +8,7 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2", "stringr")
+pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2", "stringr", "zoo")
 # install packages
 install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
@@ -112,6 +112,8 @@ data_sars <- data_sars %>%
   # - aggregate data at national level by computing weighted mean with factor being the popServed by each site
 data_full <- full_join(data_sars, data_pmmv) %>% 
   mutate(value_pmmv = SARS/PMMV) %>% 
+  filter(!is.nan(value_pmmv)) %>% 
+  group_by(date, siteName) %>% 
   mutate(moving_avg = rollmean(value_pmmv, 14, align = "center", na.pad = T))
 
 
