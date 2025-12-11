@@ -11,8 +11,7 @@ install.packages("pacman")
 pacman::p_load(
   dplyr,
   ggplot2,
-  flextable,
-  quatro
+  flextable
 )
 
 # load data
@@ -20,8 +19,7 @@ pacman::p_load(
 df_nation <- read.table(file = "./Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
 
 # Save table ----
-# tbl_nation <- 
-df_nation %>%
+tbl_nation <- df_nation %>%
   select(siteName, date, value_pmmv) %>%
   mutate(date = as.Date(date)) %>%
   filter(
@@ -33,11 +31,11 @@ df_nation %>%
   arrange(desc(date)) %>% 
   # selecting last 10 data points
   slice_head(n = 10) %>%
+  # make scientific notation
+  mutate(value_pmmv = format(value_pmmv, scientific = TRUE, digits = 3)) %>%
+  # make flextable
   flextable() %>%
-  fontsize(part = "body",size = 10) %>%
-  fontsize(part = "header",size = 10) %>%
   autofit() %>% 
-  theme_vanilla() %>%
   set_header_labels(
     siteName = "Site Name",
     date = "Date",
@@ -48,9 +46,17 @@ df_nation %>%
   font(fontname = "Arial", part = "all") %>%
   fontsize(size = 9) %>%
   bg(bg = "#00DCA1", part = "header") %>%
-  color(color = "#033636", part = "all")
+  color(color = "#033636", part = "all") %>%
+  hline(border = fp_border_default(color = "#00DCA1")) %>%
+  hline_top(border = fp_border_default(color = "#00DCA1"), part = "header") %>%
+  hline_bottom(border = fp_border_default(color = "#00DCA1"), part = "header") %>%
+  set_table_properties(layout = "autofit", width = 1) %>%
+  align(align = "left", part = "all") %>%
+  align(align = "right", j = -c(1), part = "body")
   
-# tbl_nation
+tbl_nation
+
+saveRDS(tbl_nation, "tbl_nation.rds")
 
 # display msg
 cat("- Success : tables saved \n")

@@ -6,11 +6,13 @@
 ############################################################################### #
 
 # Load packages ----
-# select packages
-pkgs <- c("dplyr", "ggplot2", "flextable", "quarto")
-# install packages
-install.packages(setdiff(pkgs, rownames(installed.packages())))
-invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+pacman::p_load(
+  dplyr,
+  ggplot2,
+  flextable,
+  quarto
+)
+
 
 # load epi assessment
 main_text <- read.csv("epi_assessment_text.csv")
