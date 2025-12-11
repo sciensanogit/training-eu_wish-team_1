@@ -133,7 +133,7 @@ meta_test <- rio::import("Belgium_export-nation.csv")
 # export as csv
 
 export_df <- data_full %>% 
-  select(siteName, value = SARS, value_load = PMMV, value_avg14d_past = moving_avg)
+  select(siteName, date, value = SARS, value_load = PMMV, value_avg14d_past = moving_avg)
 
 write.csv(export_df, "data/exportdata.csv")
 
