@@ -11,8 +11,7 @@ install.packages("pacman")
 pacman::p_load(
   dplyr,
   ggplot2,
-  flextable,
-  quatro
+  flextable
 )
 
 # load data
@@ -20,8 +19,7 @@ pacman::p_load(
 df_nation <- read.table(file = "./Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
 
 # Save table ----
-# tbl_nation <- 
-df_nation %>%
+tbl_nation <- df_nation %>%
   select(siteName, date, value_pmmv) %>%
   mutate(date = as.Date(date)) %>%
   filter(
@@ -56,7 +54,9 @@ df_nation %>%
   align(align = "left", part = "all") %>%
   align(align = "right", j = -c(1), part = "body")
   
-# tbl_nation
+tbl_nation
+
+saveRDS(tbl_nation, "tbl_nation.rds")
 
 # display msg
 cat("- Success : tables saved \n")
