@@ -7,14 +7,16 @@
 ############################################################################### #
 
 # Load packages ----
-# select packages
-pkgs <- c("dplyr", "ggplot2", "flextable", "quarto")
-# install packages
-install.packages(setdiff(pkgs, rownames(installed.packages())))
-invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+install.packages("pacman")
+pacman::p_load(
+  dplyr,
+  ggplot2,
+  flextable,
+  quatro
+)
 
 # load data
-df_nation <- read.table(file = "./data_example/Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
+df_nation <- read.table(file = "./Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
 
 # Save table ----
 tbl_nation <- df_nation %>%
