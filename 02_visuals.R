@@ -82,7 +82,7 @@ p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), ae
   geom_point(data = df %>% filter(value<1000),  aes(y = value_pmmv, colour = "pmmv_belowLOD"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
   
   # PMMV points above LOD
-  geom_point(data = df %>% filter(value<1000),  aes(y = value_pmmv, colour = "pmmv_aboveLOD"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  geom_point(data = df %>% filter(value>1000),  aes(y = value_pmmv, colour = "pmmv_aboveLOD"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
   
   # PMMV 14-day past average line 
   geom_line( aes(y = value_pmmvavg14d_past, colour = "pmmv14"), linewidth = 1.0, na.rm = TRUE ) + 
