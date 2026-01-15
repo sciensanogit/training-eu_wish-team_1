@@ -4,6 +4,16 @@
 # NOTES:
 #| git cheat: git status, git add -A, git commit -m "", git push, git pull, git restore
 #| list of things to do...
+
+
+## Adapt 02_visuals.R code to
+#|- load data saved in .data/Belgium_export-nation.csv. This csv will be created by running 01_data_prep-solution.R. If you cannot run 01_data_prep-solution.R, you can load the ./Belgium_expert-nation.csv
+#|- create ./plot folder if not existing
+#|- create a figure with the viral ratio (variable called value_pmmv) at the national level (inspiration from mission2.R is welcome)
+#|- save graph as ./plot/graph-viral_ratio-nation.png
+#|- Display nice xaxis, yaxis
+#|- Add a past two weeks moving average line from the variable  (variable called value_pmmv_avg14d_past)
+
 ############################################################################### #
 
 # Load packages ----
@@ -14,7 +24,7 @@ pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data
-df <- read_delim("Belgium_export-nation.csv")
+df <- read_delim("data/Belgium_export-nation.csv")
 
 
 df <- df %>%
@@ -34,17 +44,17 @@ if (!dir.exists("./plot")) dir.create("./plot", recursive = TRUE)
 decimal_labels <- function(x) format(x, big.mark = ",", scientific = FALSE, nsmall = 2)
 
 p <- ggplot(df, aes(x = date)) +
-  geom_line(aes(y = value_pmmv, colour = "value_pmmv"), linewidth = 1.1, na.rm = TRUE) +
+  #geom_line(aes(y = value_pmmv, colour = "value_pmmv"), linewidth = 1.1, na.rm = TRUE) +
   geom_point(aes(y = value_pmmv, colour = "value_pmmv"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
   geom_line(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
+  #geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
   scale_colour_manual(
     name = NULL,
     values = c("value_pmmv" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
     labels = c("PMMV", "PMMV (14-day avg, past)")
   ) +
   scale_x_date(
-    date_breaks = "7 days",
+    date_breaks = "4 weeks",
     date_labels = "%d/%m/%y"
     # If ggplot2 >= 3.4: guide = guide_axis(angle = 90)
   ) +
@@ -54,7 +64,7 @@ p <- ggplot(df, aes(x = date)) +
   theme(
     legend.position = "top",
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)
   )
 
 
