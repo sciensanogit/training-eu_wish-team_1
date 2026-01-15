@@ -53,7 +53,7 @@ p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), ae
   # Colour scale with matching keys 
   scale_colour_manual( name = NULL, values = c( pmmv = "#1f77b4", pmmv14 = "#ff7f0e" ), labels = c( pmmv = "PMMV", pmmv14 = "PMMV (14-day avg, past)" ) ) +
   
-  scale_x_date( date_breaks = "4 weeks", date_labels = "%d/%m/%y" ) +
+  scale_x_date( date_breaks = "4 weeks", date_labels = "%d/%m/%y" , limits = c(date_graph_start, date_graph_end)) +
   
   scale_y_continuous(labels = decimal_labels) +   # <--- decimals, no scientific
   
