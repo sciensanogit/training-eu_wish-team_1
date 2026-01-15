@@ -50,7 +50,7 @@ p <- ggplot(df, aes(x = date)) +
   #geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
   scale_colour_manual(
     name = NULL,
-    values = c("value_pmmv" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
+    values = c("Viral ratio" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
     labels = c("PMMV", "PMMV (14-day avg, past)")
   ) +
   scale_x_date(
