@@ -54,7 +54,9 @@ df <- df %>%
            c("SC_COV_4.1",
              "UA_COV_4.0",
              "SC_PMMV_2.1",
-             "UA_PMMV_2.0"))
+             "UA_PMMV_2.0") &
+           date >= date_graph_start &
+           date <= date_graph_end)
 
 # rename measures
 # diplay existing measure
