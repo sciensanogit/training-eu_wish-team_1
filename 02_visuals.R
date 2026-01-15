@@ -44,27 +44,27 @@ if (!dir.exists("./plot")) dir.create("./plot", recursive = TRUE)
 decimal_labels <- function(x) format(x, big.mark = ",", scientific = FALSE, nsmall = 2)
 
 p <- ggplot(df, aes(x = date)) +
-  #geom_line(aes(y = value_pmmv, colour = "value_pmmv"), linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(y = value_pmmv, colour = "value_pmmv"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
-  geom_line(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), linewidth = 1.1, na.rm = TRUE) +
-  #geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
-  scale_colour_manual(
-    name = NULL,
-    values = c("Viral ratio" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
-    labels = c("PMMV", "PMMV (14-day avg, past)")
-  ) +
-  scale_x_date(
-    date_breaks = "4 weeks",
-    date_labels = "%d/%m/%y"
-    # If ggplot2 >= 3.4: guide = guide_axis(angle = 90)
-  ) +
+  # PMMV points 
+  geom_point( aes(y = value_pmmv, colour = "pmmv"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  
+  # PMMV 14-day past average line 
+  geom_line( aes(y = value_pmmvavg14d_past, colour = "pmmv14"), linewidth = 1.1, na.rm = TRUE ) + 
+  
+  # Colour scale with matching keys 
+  scale_colour_manual( name = NULL, values = c( pmmv = "#1f77b4", pmmv14 = "#ff7f0e" ), labels = c( pmmv = "PMMV", pmmv14 = "PMMV (14-day avg, past)" ) ) +
+  
+  scale_x_date( date_breaks = "4 weeks", date_labels = "%d/%m/%y" ) +
+  
   scale_y_continuous(labels = decimal_labels) +   # <--- decimals, no scientific
-  labs(title = "PMMV vs 14-day Past Average", x = "Date", y = "Value") +
+  
+  labs(title = "SARS-CoV-2", x = "Date", y = "Viral ratio") +
+  
   theme_minimal(base_size = 12) +
+  
   theme(
     legend.position = "top",
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 10)
   )
 
 
