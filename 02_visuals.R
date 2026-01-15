@@ -64,7 +64,8 @@ p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), ae
   theme(
     legend.position = "top",
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 10)
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 10),
+    axis.title.x = element_text(margin = margin(t = 15))
   )
 
 
