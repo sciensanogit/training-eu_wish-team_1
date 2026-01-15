@@ -19,10 +19,10 @@
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
+# pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
 # install packages
 # install.packages(setdiff(pkgs, rownames(installed.packages())))
-invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+# invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data
 df <- read_delim("data/Belgium_export-nation.csv")
@@ -30,7 +30,7 @@ df <- read_delim("data/Belgium_export-nation.csv")
 
 df <- df %>%
   mutate(
-    date = as_date(date),  # convert to Date (handles "YYYY-MM-DD")
+    date = as.Date(date),  # convert to Date (handles "YYYY-MM-DD")
     value_pmmv = as.numeric(value_pmmv),
     value_pmmvavg14d_past = as.numeric(value_pmmv_avg14d_past)
   )
