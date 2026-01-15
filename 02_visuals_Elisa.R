@@ -14,7 +14,7 @@ install.packages(setdiff(pkgs, rownames(installed.packages())))
 invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data
-df_be <- read.csv("Belgium_export-nation.csv", sep = ";", header = TRUE)
+df_be <- read.csv("data/Belgium_export-nation.csv", sep = ";", header = TRUE)
 
 # create folder if not existing
 dir.create("plot")
@@ -56,7 +56,7 @@ plot <- df_be %>%
 plot
 
 # save graph
-ggsave("plot/graph-viral_ratio-nation.png")
+ggsave("plot/graph_oostend_aalst.png")
 
 # display msg
 cat("- Success : visuals saved \n")
