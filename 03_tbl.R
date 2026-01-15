@@ -15,8 +15,7 @@ pacman::p_load(
 )
 
 # load data
-# COMEBACK - to be updated to file created by Patrick
-df_nation <- read.table(file = "./Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
+df_nation <- read.table(file = "data/Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
 
 # Save table ----
 tbl_nation <- df_nation %>%
