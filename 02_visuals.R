@@ -44,7 +44,9 @@ if (!dir.exists("./plot")) dir.create("./plot", recursive = TRUE)
 # Label function: decimal numbers, comma thousands
 decimal_labels <- function(x) format(x, big.mark = ",", scientific = FALSE, nsmall = 2)
 
-p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), aes(x = date)) +
+# original figure
+
+p0 <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), aes(x = date)) +
   # PMMV points 
   geom_point( aes(y = value_pmmv, colour = "pmmv"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
   
@@ -70,6 +72,7 @@ p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), ae
   )
 
 
+# figure which colours data points by LOD
 
 p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), aes(x = date)) +
   # PMMV points 
