@@ -27,6 +27,8 @@ load(".RData")
 
 library(flextable)
 library(dplyr)
+
+tbl_nation <- readRDS("tbl_nation.RDS")
 ```
 
 ## Intro
@@ -39,7 +41,7 @@ Latest results dating of `r format(date_reporting, "%G-W%V")` (`r format(date_re
 ```{r}
 #| fig-cap: Viral concentration measured in wastewater from two wastewater treatment plants. Normalised SARS-CoV-2 RNA concentrations (SARS-CoV-2/PMMoV) are shown for each sampling date to illustrate trends in wastewater-based surveillance and differences in viral loading across catchments.
 
-knitr::include_graphics("./plot/dummy_plot.png")
+knitr::include_graphics("./plot/graph_oostende_aalst.png")
 ```
 
 ## Individual area level

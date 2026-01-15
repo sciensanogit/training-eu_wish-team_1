@@ -7,7 +7,7 @@
 ############################################################################### #
 
 # Load packages ----
-install.packages("pacman")
+# install.packages("pacman")
 pacman::p_load(
   dplyr,
   ggplot2,
@@ -15,12 +15,11 @@ pacman::p_load(
 )
 
 # load data
-# COMEBACK - to be updated to file created by Patrick
-df_nation <- read.table(file = "./Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
+df_nation <- read.table(file = "data/Belgium_export-nation.csv", sep = ";", dec = ".", header = T)
 
 # Save table ----
 tbl_nation <- df_nation %>%
-  select(siteName, date, value_pmmv) %>%
+  select(date, value_pmmv) %>%
   mutate(date = as.Date(date)) %>%
   filter(
     # note that date_reporting is specified in 01_data_prep.R
@@ -32,12 +31,12 @@ tbl_nation <- df_nation %>%
   # selecting last 10 data points
   slice_head(n = 10) %>%
   # make scientific notation
-  mutate(value_pmmv = format(value_pmmv, scientific = TRUE, digits = 3)) %>%
+  mutate(value_pmmv = format(value_pmmv, scientific = TRUE, digits = 3),
+         date = format(date, "%d %b %Y")) %>%
   # make flextable
   flextable() %>%
   autofit() %>% 
   set_header_labels(
-    siteName = "Site Name",
     date = "Date",
     value_pmmv = "Viral ratio (SARS/PMMV)"
   ) %>%
@@ -53,8 +52,6 @@ tbl_nation <- df_nation %>%
   set_table_properties(layout = "autofit", width = 1) %>%
   align(align = "left", part = "all") %>%
   align(align = "right", j = -c(1), part = "body")
-  
-tbl_nation
 
 saveRDS(tbl_nation, "tbl_nation.rds")
 
