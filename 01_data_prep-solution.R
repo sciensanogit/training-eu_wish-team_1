@@ -130,13 +130,18 @@ df <- df %>%
   complete(date = seq(min(date), max(date), "day")) %>%
   mutate(value_avg14d_past = na.approx(value, maxgap = 14, na.rm = FALSE),
          value_load_avg14d_past = na.approx(value_load, maxgap = 14, na.rm = FALSE),
-         value_pmmv_avg14d_past = na.approx(value_pmmv, maxgap = 14, na.rm = FALSE))
+         value_pmmv_avg14d_past = na.approx(value_pmmv, maxgap = 14, na.rm = FALSE)) %>% 
+  mutate(value_avg14d_center = value_avg14d_past,
+         value_load_avg14d_center = value_load_avg14d_past,
+         value_pmmv_avg14d_center = value_pmmv_avg14d_past)
 
 # moving average on past 14 days
 df <- df %>%
   group_by(siteName) %>%
   mutate(across(value_avg14d_past:value_pmmv_avg14d_past,
-                ~ rollmean(.x, k = 14, fill = NA, na.rm = TRUE, align = "right")))
+                ~ rollmean(.x, k = 14, fill = NA, na.rm = TRUE, align = "right"))) %>% 
+  mutate(across(value_avg14d_center:value_pmmv_avg14d_center,
+                ~ rollmean(.x, k = 14, fill = NA, na.rm = TRUE, align = "center")))
 
 # save
 df_nation <- df

@@ -13,7 +13,7 @@ pacman::p_load(
   quarto
 )
 
-## Establishing parameters (or these are going to be pulled in from somewhere?)
+## Establishing parameters
 
 # set dates
 date_reporting <- as.Date("2025-09-01", format = "%Y-%m-%d")
