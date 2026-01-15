@@ -29,6 +29,7 @@ library(flextable)
 library(dplyr)
 
 tbl_nation <- readRDS("tbl_nation.RDS")
+tbl_brussels_north <- readRDS("site_specific_table.rds")
 ```
 
 ## Intro
@@ -56,6 +57,11 @@ knitr::include_graphics("./plot/graph-viral_ratio-nation.png")
 The following table shows normalised results at individual sampling locations.
 
 ```{r}
-#| tbl-cap: Table of the most recent ten wastewater measurements, reporting site names, sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
+#| tbl-cap: Table of the most recent ten national wastewater measurements, sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
 tbl_nation
+```
+
+```{r}
+#| tbl-cap: Table of the most recent ten wastewater measurements from North Brussels sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
+tbl_brussels_north
 ```
