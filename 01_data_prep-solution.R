@@ -56,7 +56,7 @@ df <- df %>%
              "SC_PMMV_2.1",
              "UA_PMMV_2.0") &
            date >= date_graph_start &
-           date <= date_graph_end)
+           date <= date_reporting) # Put in as a QA but also acting as if this is "today" for the exercise
 
 # rename measures
 # diplay existing measure
