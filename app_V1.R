@@ -5,7 +5,9 @@ invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data ----
 # load nation data
-df_nation <- read.csv2("./data/Belgium_export-nation.csv", sep = ";")
+df <- df_nation <- read.csv2("./data/Belgium_export-nation.csv", sep = ";") %>%
+  select(-value_avg14d_center, -value_load_avg14d_center, -value_pmmv_avg14d_center) %>%
+  mutate(date = as.Date(date))
 
 # load the data by site and select appropriate variables
 df_site <- read.csv2("./data/Belgium_export-site.csv", sep = ";") %>%
@@ -17,9 +19,12 @@ df_site <- read.csv2("./data/Belgium_export-site.csv", sep = ";") %>%
 df <- rbind(df_nation, df_site)
 
 # clean data
-df$date <- as.Date(df$date)
+df$date <- as.POSIXct(df$date)
 df$value_pmmv <- as.numeric(df$value_pmmv)*1000
 df$value_pmmv_avg14d_past <- as.numeric(df$value_pmmv_avg14d_past)*1000
+
+df <- df %>%
+  filter(measure == "SARS")
 
 # ui ----
 ui <- navbarPage(
@@ -88,6 +93,9 @@ ui <- navbarPage(
     plotlyOutput("viralPlot")
     ,
     
+    #textOutput("test_text"),
+    #tableOutput("test_df"),
+    
     # Bottom acknowledgment box
     div(class = "info-box",
         "Acknowledgment: Group 1 of the EU WISH training consists of Elisa Salmivirta, Sophie-Berencie Wilmes, Kim Nguyen, and Gizem Bilgin" )
@@ -107,14 +115,25 @@ ui <- navbarPage(
 server <- function(input, output, session) {
   
   filtered_data <- reactive({
-    df %>% filter(siteName == input$site)
+    df %>% 
+      filter(siteName == input$site &
+                    is.na(date) == FALSE)
+  })
+  
+  output$test_text <- renderText({
+    this_data <- filtered_data()
+    nrow(this_data)
+  })
+  
+  output$test_df <- renderTable({
+    filtered_data()
   })
   
   output$viralPlot <- renderPlotly({
     
-    data <- filtered_data()
+    this_data <- filtered_data()
     
-    p <- ggplot(data, aes(x = date)) +
+    p <- ggplot(this_data, aes(x = date)) +
       geom_point(
         aes(y = value_pmmv),
         colour = "#92D050",
