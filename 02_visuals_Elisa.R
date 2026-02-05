@@ -48,7 +48,7 @@ level_labels <- c("Moderate level", "High level", "Very high level")  # labels
 plot <- df_be %>% 
   ggplot(aes(x = date, y = value_load)) + 
   geom_point(color = "darkgreen") +
-  geom_line(data = df_be, aes(x = date, y = value_load_avg14d_past), color = "green", na.rm = TRUE) + 
+  geom_line(data = df_be, aes(x = date, y = value_load_avg14d_past), color = "lightgreen", na.rm = TRUE) + 
   ggtitle("SARS-Cov-2") +
   labs(x = NULL, y = "SARS-CoV-2 viral to faecal ratio \n (10e-6 copies/copies)") + 
   theme_custom

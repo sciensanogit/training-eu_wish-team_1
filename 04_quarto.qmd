@@ -1,7 +1,7 @@
 ---
 title: 'Wastewater-based surveillance report'
 subtitle: "Respiratory viruses"
-author: "Author: Team 1 (Elisa, Gizem, Patrick, Sophie)"
+author: "Author: Team 1 (Elisa, Gizem, Patrick, Sophie, Kim)"
 format:  
   html: 
     toc: true
@@ -28,8 +28,10 @@ load(".RData")
 library(flextable)
 library(dplyr)
 
-tbl_nation <- readRDS("tbl_nation.RDS")
+tbl_sars <- readRDS("tbl_sars.RDS")
 tbl_brussels_north <- readRDS("site_specific_table.rds")
+tbl_rsv <- readRDS("tbl_rsv.RDS")
+tbl_flu <- readRDS("tbl_flu.RDS")
 ```
 
 ## Intro
@@ -58,10 +60,26 @@ The following table shows normalised results at individual sampling locations.
 
 ```{r}
 #| tbl-cap: Table of the most recent ten national wastewater measurements, sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
-tbl_nation
+tbl_sars
 ```
 
 ```{r}
 #| tbl-cap: Table of the most recent ten wastewater measurements from North Brussels sampling dates, and normalised SARS-CoV-2 viral ratios (SARS-CoV-2/PMMoV).
 tbl_brussels_north
+```
+
+## Influenza
+
+Following table shows PMMoV normalised results at national level for influenza.
+```{r}
+#| tbl-cap: Table of the most recent ten national wastewater measurements, sampling dates, and normalised Influenza viral ratios (Influenza/PMMoV).
+tbl_flu
+```
+
+## RSV
+
+Following table shows PMMoV normalised results at national level for RS-virus.
+```{r}
+#| tbl-cap: Table of the most recent ten national wastewater measurements, sampling dates, and normalised Influenza viral ratios (RSV/PMMoV).
+tbl_rsv
 ```

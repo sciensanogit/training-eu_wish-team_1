@@ -8,11 +8,13 @@ invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 df_nation <- read.csv2("./data/Belgium_export-nation.csv", sep = ";")
 
 # load the data by site and select appropriate variables
-# df_site <- read.csv2("??.csv", sep = ";") %>%
-#   select(??)
+df_site <- read.csv2("./data/Belgium_export-site.csv", sep = ";") %>%
+  select(any_of(colnames(df_nation))) %>%
+  mutate(date = as.Date(date),
+         across(contains("value"), ~ as.numeric(.x)))
 
 # bind nation and site data
-df <- rbind(df_nation)
+df <- rbind(df_nation, df_site)
 
 # clean data
 df$date <- as.Date(df$date)
@@ -51,7 +53,9 @@ ui <- navbarPage(
     
     # Bottom acknowledgment box
     div(class = "info-box",
-        "Welcome to this nice page describing..." )
+        "Welcome to this nice page describing our wastewater surveillance program." ),
+    
+    p("Hello, welcome to Group 1's Shiny. We are learning how to present data so please be gentle in your feedback.")
   ),
   
   
@@ -59,7 +63,7 @@ ui <- navbarPage(
     "SARS-CoV-2",
     # Bottom acknowledgment box
     div(class = "info-box",
-        "Add a description of the surveillance..." )
+        "Our SARS-CoV-2 surveillance program identifies changes in community level transmission of SARS-CoV-2, the pathogen causing COVID-19." )
     ,
     
     # Three horizontal info boxes
@@ -86,8 +90,14 @@ ui <- navbarPage(
     
     # Bottom acknowledgment box
     div(class = "info-box",
-        "Acknowledgment: to be filled" )
+        "Acknowledgment: Group 1 of the EU WISH training consists of Elisa Salmivirta, Sophie-Berencie Wilmes, Kim Nguyen, and Gizem Bilgin" )
     
+  ),
+  
+  tabPanel(
+    "Influenza",
+    div(class = "info-box",
+        "We will visualise influenza data once it becomes available in 2027." )
   )
   
   
@@ -105,13 +115,39 @@ server <- function(input, output, session) {
     data <- filtered_data()
     
     p <- ggplot(data, aes(x = date)) +
-      geom_point(aes(y = value_pmmv), colour = "#92D050", size = 1, na.rm = T) +
-      scale_y_continuous(limits = c(0, NA)) +
-      labs(
-        title = paste(input$site),
-        x = "", y = "(c/c)"
+      geom_point(
+        aes(y = value_pmmv),
+        colour = "#92D050",
+        size = 1,
+        na.rm = TRUE
       ) +
-      theme_minimal(base_size = 14)
+      geom_line(
+        aes(y = value_pmmv_avg14d_past),
+        colour = "#BCCF00FF",
+        linewidth = 0.9,
+        na.rm = TRUE
+      ) +
+      scale_y_continuous(
+        limits = c(0, NA),
+        expand = expansion(mult = c(0, 0.05))
+      ) +
+      scale_x_date(
+        date_breaks = "3 months",
+        date_labels = "%b %Y",
+        expand = expansion(mult = c(0.01, 0.01))
+      ) +
+      labs(
+        title = input$site,
+        x = "",
+        y = "Concentration (c/c)"
+      ) +
+      theme_minimal(base_size = 14) +
+      theme(
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(face = "bold"),
+        axis.line = element_line(colour = "black", linewidth = 0.6)
+      )
     
     ggplotly(p)
   })
