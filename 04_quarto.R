@@ -13,12 +13,17 @@ pacman::p_load(
   quarto
 )
 
+## Establishing parameters
+
+# set dates
+date_reporting <- as.Date("2025-09-01", format = "%Y-%m-%d")
+
 
 # load epi assessment
 main_text <- read.csv("epi_assessment_text.csv")
 
 # Render weekly sub report ----
-save.image(".RData")
+# save.image(".RData")
 
 # settings
 output_name <- paste0("Report-", format(date_reporting, "%G-W%V"))

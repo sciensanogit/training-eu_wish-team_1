@@ -4,22 +4,33 @@
 # NOTES:
 #| git cheat: git status, git add -A, git commit -m "", git push, git pull, git restore
 #| list of things to do...
+
+
+## Adapt 02_visuals.R code to
+#|- load data saved in .data/Belgium_export-nation.csv. This csv will be created by running 01_data_prep-solution.R. If you cannot run 01_data_prep-solution.R, you can load the ./Belgium_expert-nation.csv
+#|- create ./plot folder if not existing
+#|- create a figure with the viral ratio (variable called value_pmmv) at the national level (inspiration from mission2.R is welcome)
+#|- save graph as ./plot/graph-viral_ratio-nation.png
+#|- Display nice xaxis, yaxis
+#|- Add a past two weeks moving average line from the variable  (variable called value_pmmv_avg14d_past)
+#|- Display values below the limit of quantification in red and above in green on graph (values below 1000 copies of SARS/copies of PMMV)
+
 ############################################################################### #
 
 # Load packages ----
 # select packages
-pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
+# pkgs <- c("dplyr", "tidyr", "zoo", "writexl", "ggplot2","readr", "lubridate")
 # install packages
 # install.packages(setdiff(pkgs, rownames(installed.packages())))
-invisible(lapply(pkgs, FUN = library, character.only = TRUE))
+# invisible(lapply(pkgs, FUN = library, character.only = TRUE))
 
 # load data
-df <- read_delim("Belgium_export-nation.csv")
+df <- read_delim("data/Belgium_export-nation.csv")
 
 
 df <- df %>%
   mutate(
-    date = as_date(date),  # convert to Date (handles "YYYY-MM-DD")
+    date = as.Date(date),  # convert to Date (handles "YYYY-MM-DD")
     value_pmmv = as.numeric(value_pmmv),
     value_pmmvavg14d_past = as.numeric(value_pmmv_avg14d_past)
   )
@@ -33,29 +44,70 @@ if (!dir.exists("./plot")) dir.create("./plot", recursive = TRUE)
 # Label function: decimal numbers, comma thousands
 decimal_labels <- function(x) format(x, big.mark = ",", scientific = FALSE, nsmall = 2)
 
-p <- ggplot(df, aes(x = date)) +
-  geom_line(aes(y = value_pmmv, colour = "value_pmmv"), linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(y = value_pmmv, colour = "value_pmmv"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
-  geom_line(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(y = value_pmmvavg14d_past, colour = "value_pmmvavg14d_past"), size = 1.8, alpha = 0.7, na.rm = TRUE) +
-  scale_colour_manual(
-    name = NULL,
-    values = c("value_pmmv" = "#1f77b4", "value_pmmvavg14d_past" = "#ff7f0e"),
-    labels = c("PMMV", "PMMV (14-day avg, past)")
-  ) +
-  scale_x_date(
-    date_breaks = "7 days",
-    date_labels = "%d/%m/%y"
-    # If ggplot2 >= 3.4: guide = guide_axis(angle = 90)
-  ) +
+# original figure
+
+p <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), aes(x = date)) +
+  # PMMV points 
+  geom_point( aes(y = value_pmmv, colour = "pmmv"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  
+  # PMMV 14-day past average line 
+  geom_line( aes(y = value_pmmvavg14d_past, colour = "pmmv14"), linewidth = 1.1, na.rm = TRUE ) + 
+  
+  # Colour scale with matching keys 
+  scale_colour_manual( name = NULL, values = c( pmmv = "#1f77b4", pmmv14 = "#ff7f0e" ), labels = c( pmmv = "PMMV", pmmv14 = "PMMV (14-day avg, past)" ) ) +
+  
+  scale_x_date( date_breaks = "4 weeks", date_labels = "%d/%m/%y" , limits = c(date_graph_start, date_graph_end)) +
+  
   scale_y_continuous(labels = decimal_labels) +   # <--- decimals, no scientific
-  labs(title = "PMMV vs 14-day Past Average", x = "Date", y = "Value") +
+  
+  labs(title = "SARS-CoV-2", x = "Date", y = "Viral ratio") +
+  
   theme_minimal(base_size = 12) +
+  
   theme(
     legend.position = "top",
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 10),
+    axis.title.x = element_text(margin = margin(t = 15))
   )
+
+
+# figure which colours data points by LOD
+
+p1 <- ggplot(df %>% filter(date >= date_graph_start & date <= date_graph_end), aes(x = date)) +
+  # PMMV points 
+ # geom_point( aes(y = value_pmmv, colour = "pmmv"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  
+  # PMMV points below LOD
+  geom_point(data = df %>% filter(value<1000),  aes(y = value_pmmv, colour = "pmmv_belowLOD"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  
+  # PMMV points above LOD
+  geom_point(data = df %>% filter(value>1000),  aes(y = value_pmmv, colour = "pmmv_aboveLOD"), size = 1.8, shape = 16, alpha = 0.7, na.rm = TRUE ) +
+  
+  # PMMV 14-day past average line 
+  geom_line( aes(y = value_pmmvavg14d_past, colour = "pmmv14"), linewidth = 1.0, na.rm = TRUE ) + 
+  
+  # Colour scale with matching keys 
+  #scale_colour_manual( name = NULL, values = c( pmmv = "#1f77b4", pmmv14 = "#ff7f0e" ), labels = c( pmmv = "PMMV", pmmv14 = "PMMV (14-day avg, past)" ) ) +
+  
+  scale_colour_manual( name = NULL, values = c( pmmv14 = "grey20" , pmmv_belowLOD = "red", pmmv_aboveLOD = "green2"), labels = c( pmmv14 = "PMMV (14-day avg, past)",  pmmv_belowLOD = "PMMV below LOD", pmmv_aboveLOD = "PMMV above LOD") ) +
+  
+  
+  scale_x_date( date_breaks = "4 weeks", date_labels = "%d/%m/%y" , limits = c(date_graph_start, date_graph_end)) +
+  
+  scale_y_continuous(labels = decimal_labels) +   # <--- decimals, no scientific
+  
+  labs(title = "SARS-CoV-2", x = "Date", y = "Viral ratio") +
+  
+  theme_minimal(base_size = 12) +
+  
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 10),
+    axis.title.x = element_text(margin = margin(t = 15))
+  )
+
 
 
 # save graph
